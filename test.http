@@ -1,0 +1,10 @@
+@base=http://127.0.0.1:3333
+
+### create
+POST {{base}}/clip
+Content-Type: application/json
+
+{
+  "type": 122,
+  "content": "sss"
+}
