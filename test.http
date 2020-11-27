@@ -8,3 +8,26 @@ Content-Type: application/json
   "type": 122,
   "content": "sss"
 }
+
+### get
+GET  {{base}}/clip?page=2&size=3
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ik9iamVjdElEKFwiNWZjMDlmMGQ1YzVjOWRkMDIxOGU0MTQ0XCIpIiwidGltZXN0YW1wIjoiMjAyMC0xMS0yN1QxNTozNToyMy43NTQwOTgrMDg6MDAifQ.CTlrksTqxYSjhkSfBLe8v6tNgUuFZLDDMAzsjQ5bY74
+
+### register
+POST  {{base}}/auth/register
+Content-Type: application/json
+
+{
+  "username": "test",
+  "password": "test",
+  "email": "2@q.com"
+}
+
+### login
+POST {{base}}/auth/login
+Content-Type: application/json
+
+{
+  "username": "test",
+  "password": "test"
+}
