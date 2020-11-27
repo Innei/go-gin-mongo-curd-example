@@ -7,9 +7,13 @@ Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmYzA5ZjBkN
 Accept-Language: en
 
 {
-  "type": 22,
+  "type": 1,
   "content": "sss"
 }
+
+### query
+GET {{base}}/clip/5fc104d007b3bbe249d7d9bb
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmYzA5ZjBkNWM1YzlkZDAyMThlNDE0NCIsInRpbWVzdGFtcCI6IjIwMjAtMTEtMjdUMTk6Mzg6MjQuNjU2ODE3KzA4OjAwIn0.VsDhIncfIVNUbkWgrEjPwEbVSQNAOOEUgWtR7eWujWw
 
 ### get
 GET  {{base}}/clip?page=2&size=3000

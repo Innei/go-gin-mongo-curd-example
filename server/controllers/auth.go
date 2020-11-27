@@ -78,7 +78,7 @@ func (a Auth) RegisterRoute(ctx *gin.Context) {
 		return
 	}
 	token := SignToken(res.InsertedID.(primitive.ObjectID).Hex())
-	ctx.JSON(200, gin.H{"data": res.InsertedID, "token": token})
+	ctx.JSON(200, gin.H{"id": res.InsertedID, "token": token})
 }
 
 func SignToken(id string) string {

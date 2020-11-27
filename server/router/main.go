@@ -20,6 +20,7 @@ func RegisterRoutes(e *gin.Engine) {
 	clip.Use(middlewares.PermissionMiddleware())
 	{
 		clip.GET("/", Clip.GetClipsRoute)
+		clip.GET("/:id", Clip.GetClipOneRoute)
 		clip.POST("/", Clip.CreateClipRoute)
 	}
 }
