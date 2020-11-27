@@ -20,7 +20,7 @@ const (
 
 type Clip struct {
 	Id        primitive.ObjectID `bson:"_id,omitempty" json:"id,omitempty"`
-	Type      ClipType           `bson:"type" json:"type" binding:"required"`
+	Type      ClipType           `bson:"type" json:"type" binding:"required,oneof=1 2 3"`
 	Content   string             `bson:"content" json:"content" binding:"required"`
 	CreatedAt time.Time          `bson:"created_at" json:"created_at"`
 	IsDeleted bool               `bson:"is_deleted" json:"is_deleted"`

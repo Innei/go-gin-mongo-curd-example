@@ -30,7 +30,7 @@ type LoginPayload struct {
 	Id       primitive.ObjectID `json:"id"`
 }
 
-func LoginRoute(ctx *gin.Context) {
+func (a Auth) LoginRoute(ctx *gin.Context) {
 	var body Auth
 	if err := ctx.ShouldBindJSON(&body); err != nil {
 		ctx.JSON(422, utils.ErrorFactory(err))
@@ -56,14 +56,14 @@ func LoginRoute(ctx *gin.Context) {
 	payload := LoginPayload{
 		Email:    document.Email,
 		Id:       document.Id,
-		Token:    SignToken(document.Id.String()),
+		Token:    SignToken(document.Id.Hex()),
 		Username: document.Username,
 	}
 
 	ctx.JSON(200, payload)
 }
 
-func RegisterRoute(ctx *gin.Context) {
+func (a Auth) RegisterRoute(ctx *gin.Context) {
 	var body models.User
 
 	if err := ctx.ShouldBindJSON(&body); err != nil {
@@ -77,16 +77,8 @@ func RegisterRoute(ctx *gin.Context) {
 		ctx.JSON(500, utils.ErrorFactory(err))
 		return
 	}
-	token := SignToken(res.InsertedID.(primitive.ObjectID).String())
+	token := SignToken(res.InsertedID.(primitive.ObjectID).Hex())
 	ctx.JSON(200, gin.H{"data": res.InsertedID, "token": token})
-}
-
-func FindUser(username string) {
-
-}
-
-func CreateUser() {
-
 }
 
 func SignToken(id string) string {

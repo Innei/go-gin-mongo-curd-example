@@ -5,22 +5,19 @@ import (
 	"clipboard/models"
 	"clipboard/utils"
 	"context"
-	"net/http"
-	"time"
-
 	"github.com/gin-gonic/gin"
 	. "github.com/gobeam/mongo-go-pagination"
 	"go.mongodb.org/mongo-driver/bson"
+	"net/http"
+	"time"
 )
 
-type Pager struct {
-	Page int64 `form:"page"`
-	Size int64 `form:"size"`
+type Clip struct {
 }
 
-func GetClipRoute(ctx *gin.Context) {
+func (c Clip) GetClipsRoute(ctx *gin.Context) {
 
-	var query Pager
+	var query models.Pager
 	if err := ctx.ShouldBindQuery(&query); err != nil {
 		ctx.JSON(200, utils.ErrorFactory(err))
 		return
@@ -48,7 +45,7 @@ func GetClipRoute(ctx *gin.Context) {
 	ctx.JSON(200, gin.H{"data": List, "paginator": res.Pagination})
 }
 
-func CreateClipRoute(ctx *gin.Context) {
+func (c Clip) CreateClipRoute(ctx *gin.Context) {
 	var body models.Clip
 
 	if err := ctx.ShouldBindJSON(&body); err != nil {
@@ -57,11 +54,19 @@ func CreateClipRoute(ctx *gin.Context) {
 
 		return
 	}
+	user, exist := ctx.Get("user")
+
+	if !exist {
+		ctx.JSON(422, gin.H{"message": "user is not exist."})
+		return
+	}
+
 	model := models.Clip{
 		Content:   body.Content,
 		CreatedAt: time.Now(),
 		IsDeleted: false,
 		Type:      body.Type,
+		UserId:    user.(models.User).Id,
 	}
 	if res, err := db.ClipCollection.InsertOne(context.TODO(), model); err != nil {
 		ctx.JSON(http.StatusBadRequest, utils.ErrorFactory(err))

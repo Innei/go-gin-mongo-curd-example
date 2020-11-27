@@ -21,5 +21,14 @@ func Db() *mongo.Client {
 		log.Fatal(err)
 	}
 	fmt.Println("Connected to MongoDB!")
+
 	return client
+}
+
+func InitDb() {
+	Db()
+	CreateIndex("users", "username", true)
+	CreateIndex("clip", "created_at", false)
+
+
 }

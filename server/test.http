@@ -1,0 +1,35 @@
+@base=http://127.0.0.1:3333
+
+### create
+POST {{base}}/clip
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmYzA5ZjBkNWM1YzlkZDAyMThlNDE0NCIsInRpbWVzdGFtcCI6IjIwMjAtMTEtMjdUMTk6Mzg6MjQuNjU2ODE3KzA4OjAwIn0.VsDhIncfIVNUbkWgrEjPwEbVSQNAOOEUgWtR7eWujWw
+Accept-Language: en
+
+{
+  "type": 22,
+  "content": "sss"
+}
+
+### get
+GET  {{base}}/clip?page=2&size=3000
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmYzA5ZjBkNWM1YzlkZDAyMThlNDE0NCIsInRpbWVzdGFtcCI6IjIwMjAtMTEtMjdUMTk6Mzg6MjQuNjU2ODE3KzA4OjAwIn0.VsDhIncfIVNUbkWgrEjPwEbVSQNAOOEUgWtR7eWujWw
+
+### register
+POST  {{base}}/auth/register
+Content-Type: application/json
+
+{
+  "username": "test",
+  "password": "test",
+  "email": "2@q.com"
+}
+
+### login
+POST {{base}}/auth/login
+Content-Type: application/json
+
+{
+  "username": "test",
+  "password": "test"
+}
