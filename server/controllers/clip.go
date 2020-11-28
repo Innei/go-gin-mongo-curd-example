@@ -5,7 +5,6 @@ import (
 	"clipboard/models"
 	"clipboard/utils"
 	"context"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	. "github.com/gobeam/mongo-go-pagination"
 	"go.mongodb.org/mongo-driver/bson"
@@ -50,15 +49,9 @@ func (c Clip) GetClipsRoute(ctx *gin.Context) {
 
 func (c Clip) GetClipOneRoute(ctx *gin.Context) {
 	var id string = ctx.Param("id")
-	if len(id) == 0 {
-		ctx.JSON(422, utils.ErrorMessage("id can't be empty."))
-		return
-	}
-
-	_id, err := primitive.ObjectIDFromHex(id)
-
-	if err != nil {
-		ctx.JSON(422, utils.ErrorMessage("id must be mongo object id."))
+	_id := checkObjectId(ctx, id)
+	if _id.IsZero() {
+		ctx.Abort()
 		return
 	}
 
@@ -100,8 +93,6 @@ func (c Clip) GetClipOneRoute(ctx *gin.Context) {
 	for cur.Next(context.Background()) {
 		cur.Decode(&res)
 	}
-
-	fmt.Println(res)
 
 	ctx.JSON(200, res)
 
@@ -148,4 +139,114 @@ func (c Clip) CreateClipRoute(ctx *gin.Context) {
 		ctx.JSON(200, result)
 	}
 
+}
+
+func (c Clip) PatchClipRoute(ctx *gin.Context) {
+	id := ctx.Param("id")
+	recovery := ctx.Query("recovery")
+
+	_id := checkObjectId(ctx, id)
+	if _id.IsZero() {
+		ctx.Abort()
+		return
+	}
+	var body models.ClipOption
+	if err := ctx.ShouldBindJSON(&body); err != nil {
+		ctx.JSON(422, utils.ErrorFactory(err))
+		return
+	}
+
+	var clip models.Clip
+
+	err := db.ClipCollection.FindOne(context.Background(), bson.D{{"_id", _id}}).Decode(&clip)
+
+	if err != nil {
+		ctx.JSON(422, utils.ErrorMessage("document not found."))
+		return
+	}
+
+	if clip.IsDeleted && recovery == "" {
+		ctx.JSON(422, utils.ErrorMessage("this document has been deleted."))
+		return
+	}
+
+	var updated = bson.D{}
+
+	if body.Type != 0 {
+		updated = append(updated, bson.E{Key: "type", Value: body.Type})
+	}
+	if len(body.Content) > 0 {
+		updated = append(updated, bson.E{Key: "content", Value: body.Content})
+	}
+	if clip.IsDeleted && len(recovery) > 0 {
+		updated = append(updated, bson.E{Key: "is_deleted", Value: false})
+		updated = append(updated, bson.E{Key: "deleted_at"})
+	}
+
+	if len(updated) == 0 {
+		ctx.Status(204)
+		return
+	}
+
+	
+	var update = bson.D{{"$set", updated}}
+
+	_, err = db.ClipCollection.UpdateOne(context.TODO(), bson.D{{"_id", _id}}, update)
+
+	if err != nil {
+		ctx.JSON(500, utils.ErrorFactory(err))
+		return
+	}
+
+	ctx.Status(204)
+
+}
+
+func (c Clip) DeleteClipRoute(ctx *gin.Context) {
+	id := ctx.Param("id")
+	_id := checkObjectId(ctx, id)
+	if _id.IsZero() {
+		ctx.Abort()
+		return
+	}
+
+	var clip models.Clip
+	err := db.ClipCollection.FindOne(context.TODO(), bson.D{{"_id", _id}}).Decode(&clip)
+
+	if err != nil {
+		ctx.JSON(422, "can't find document.")
+		return
+	}
+
+	if clip.IsDeleted {
+		ctx.JSON(422, "document has been deleted.")
+		return
+	}
+
+	_, err = db.ClipCollection.UpdateOne(context.Background(), bson.D{{"_id", _id}}, bson.D{
+		{"$set", bson.D{
+			{"is_deleted", true},
+			{"deleted_at", time.Now()},
+		}},
+	})
+
+	ctx.Status(204)
+}
+
+func checkObjectId(ctx *gin.Context, id string) primitive.ObjectID {
+	if len(id) == 0 {
+		ctx.JSON(422, utils.ErrorMessage("id can't be empty."))
+
+		return primitive.NilObjectID
+
+	}
+
+	_id, err := primitive.ObjectIDFromHex(id)
+
+	if err != nil {
+		ctx.JSON(422, utils.ErrorFactory(err))
+		return primitive.NilObjectID
+	}
+
+	return _id
 }

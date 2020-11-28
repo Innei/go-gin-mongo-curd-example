@@ -11,6 +11,21 @@ Accept-Language: en
   "content": "sss"
 }
 
+### patch
+PATCH {{base}}/clip/5fc0eebf002cfafd0f10f523?recovery=1
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmYzA5ZjBkNWM1YzlkZDAyMThlNDE0NCIsInRpbWVzdGFtcCI6IjIwMjAtMTEtMjdUMTk6Mzg6MjQuNjU2ODE3KzA4OjAwIn0.VsDhIncfIVNUbkWgrEjPwEbVSQNAOOEUgWtR7eWujWw
+Accept-Language: en
+
+{
+ 
+  "content": "s"
+}
+
+### delete
+DELETE {{base}}/clip/5fc0eebf002cfafd0f10f523
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmYzA5ZjBkNWM1YzlkZDAyMThlNDE0NCIsInRpbWVzdGFtcCI6IjIwMjAtMTEtMjdUMTk6Mzg6MjQuNjU2ODE3KzA4OjAwIn0.VsDhIncfIVNUbkWgrEjPwEbVSQNAOOEUgWtR7eWujWw
+
 ### query
 GET {{base}}/clip/5fc104d007b3bbe249d7d9bb
 Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmYzA5ZjBkNWM1YzlkZDAyMThlNDE0NCIsInRpbWVzdGFtcCI6IjIwMjAtMTEtMjdUMTk6Mzg6MjQuNjU2ODE3KzA4OjAwIn0.VsDhIncfIVNUbkWgrEjPwEbVSQNAOOEUgWtR7eWujWw
@@ -24,7 +39,7 @@ POST  {{base}}/auth/register
 Content-Type: application/json
 
 {
-  "username": "test",
+  "username": "tes3t-3a",
   "password": "test",
   "email": "2@q.com"
 }
@@ -34,6 +49,16 @@ POST {{base}}/auth/login
 Content-Type: application/json
 
 {
-  "username": "test",
+  "username": "tes3t-2a",
   "password": "test"
+}
+
+### update user
+PATCH  {{base}}/auth
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmYzA5ZjBkNWM1YzlkZDAyMThlNDE0NCIsInRpbWVzdGFtcCI6IjIwMjAtMTEtMjdUMTk6Mzg6MjQuNjU2ODE3KzA4OjAwIn0.VsDhIncfIVNUbkWgrEjPwEbVSQNAOOEUgWtR7eWujWw
+
+{
+  "password": "test",
+   "old_password": "test"
 }

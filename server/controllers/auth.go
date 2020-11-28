@@ -81,6 +81,49 @@ func (a Auth) RegisterRoute(ctx *gin.Context) {
 	ctx.JSON(200, gin.H{"id": res.InsertedID, "token": token})
 }
 
+func (a Auth) PatchUserRoute(ctx *gin.Context) {
+	user, exist := ctx.Get("user")
+	if !exist {
+		ctx.JSON(401, utils.ErrorMessage("identity expired."))
+		return
+	}
+
+	var body models.UserOption
+	if err := ctx.ShouldBindJSON(&body); err != nil {
+		ctx.JSON(422, utils.ErrorFactory(err))
+		return
+
+	}
+
+	_id := user.(models.User).Id
+
+	updated := bson.D{}
+
+	if len(body.Email) > 0 {
+		updated = append(updated, bson.E{Key: "email", Value: body.Email})
+	}
+
+	if len(body.Password) > 0 && comparePasswords(user.(models.User).Password, []byte(body.OldPassword)) {
+		updated = append(updated, bson.E{Key: "password", Value: hashAndSalt([]byte(body.Password))})
+	}
+
+	if len(updated) == 0 {
+		ctx.Status(204)
+		return
+	}
+
+	_, err := db.UserCollection.UpdateOne(context.Background(), bson.D{{"_id", _id}}, bson.D{
+		{"$set", updated},
+	})
+
+	if err != nil {
+		ctx.JSON(500, utils.ErrorFactory(err))
+		return
+	}
+
+	ctx.Status(204)
+}
+
 func SignToken(id string) string {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"id":        id,
@@ -101,7 +144,7 @@ func hashAndSalt(pwd []byte) string {
 	// package along with DefaultCost & MaxCost.
 	// The cost can be any value you want provided it isn't lower
 	// than the MinCost (4)
-	hash, err := bcrypt.GenerateFromPassword(pwd, bcrypt.MinCost)
+	hash, err := bcrypt.GenerateFromPassword(pwd, 6)
 	if err != nil {
 		log.Println(err)
 	}

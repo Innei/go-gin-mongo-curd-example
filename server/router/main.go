@@ -15,6 +15,7 @@ func RegisterRoutes(e *gin.Engine) {
 	{
 		auth.POST("/login", Auth.LoginRoute)
 		auth.POST("/register", Auth.RegisterRoute)
+		auth.Use(middlewares.PermissionMiddleware()).PATCH("/", Auth.PatchUserRoute)
 	}
 	clip := e.Group("/clip")
 	clip.Use(middlewares.PermissionMiddleware())
@@ -22,5 +23,7 @@ func RegisterRoutes(e *gin.Engine) {
 		clip.GET("/", Clip.GetClipsRoute)
 		clip.GET("/:id", Clip.GetClipOneRoute)
 		clip.POST("/", Clip.CreateClipRoute)
+		clip.PATCH("/:id", Clip.PatchClipRoute)
+		clip.DELETE("/:id", Clip.DeleteClipRoute)
 	}
 }

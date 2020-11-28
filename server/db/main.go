@@ -1,6 +1,7 @@
 package db
 
 import (
+	"clipboard/models"
 	"context"
 	"fmt"
 	"log"
@@ -27,8 +28,7 @@ func Db() *mongo.Client {
 
 func InitDb() {
 	Db()
-	CreateIndex("users", "username", true)
-	CreateIndex("clip", "created_at", false)
-
+	CreateIndex(models.CollectionUser, "username", true)
+	CreateIndex(models.CollectionUser, "created_at", false)
 
 }

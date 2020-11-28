@@ -27,3 +27,8 @@ type Clip struct {
 	DeletedAt time.Time          `bson:"deleted_at,omitempty" json:"deleted_at,omitempty"`
 	UserId    primitive.ObjectID `bson:"user_id,omitempty" json:"user_id,omitempty"`
 }
+
+type ClipOption struct {
+	Type    ClipType `bson:"type,omitempty" json:"type,omitempty" binding:"omitempty,oneof=1 2 3"`
+	Content string   `bson:"content" json:"content,omitempty" binding:"omitempty"`
+}

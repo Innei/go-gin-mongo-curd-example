@@ -1,6 +1,7 @@
 package db
 
 import (
+	"clipboard/models"
 	"context"
 	"fmt"
 	"go.mongodb.org/mongo-driver/bson"
@@ -10,8 +11,8 @@ import (
 )
 
 var Database = Db().Database("clipboard")
-var ClipCollection = Database.Collection("clips")
-var UserCollection = Database.Collection("users")
+var ClipCollection = Database.Collection(models.CollectionClip)
+var UserCollection = Database.Collection(models.CollectionUser)
 
 // CreateIndex - creates an index for a specific field in a collection
 func CreateIndex(collectionName string, field string, unique bool) bool {
