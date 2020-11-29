@@ -78,7 +78,6 @@ func (c Clip) GetClipOneRoute(ctx *gin.Context) {
 			{"is_deleted", 1},
 			{"type", 1},
 			{"user", bson.D{
-
 				{"$arrayElemAt", bson.A{"$user", 0}},
 			}},
 		}}}
@@ -188,7 +187,7 @@ func (c Clip) PatchClipRoute(ctx *gin.Context) {
 		return
 	}
 
-	
+
 	var update = bson.D{{"$set", updated}}
 
 	_, err = db.ClipCollection.UpdateOne(context.TODO(), bson.D{{"_id", _id}}, update)

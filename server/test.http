@@ -59,6 +59,5 @@ Content-Type: application/json
 Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmYzA5ZjBkNWM1YzlkZDAyMThlNDE0NCIsInRpbWVzdGFtcCI6IjIwMjAtMTEtMjdUMTk6Mzg6MjQuNjU2ODE3KzA4OjAwIn0.VsDhIncfIVNUbkWgrEjPwEbVSQNAOOEUgWtR7eWujWw
 
 {
-  "password": "test",
-   "old_password": "test"
+ "email": "a"
 }
